@@ -58,27 +58,36 @@ class Character(pygame.sprite.Sprite):
 			self.melee = True
 
 
+		
 		if keys[pygame.K_d]:
 			self.direction.x = 1
 			self.status = 'walk'
 		elif keys[pygame.K_a]:
 			self.direction.x = -1
 			self.status = 'walk'
-		elif keys[pygame.K_w]:
+		if not any(pygame.key.get_pressed()):
+			self.direction.x = 0
+			self.status = 'idle'
+		
+		if keys[pygame.K_w]:
 			self.direction.y = -1
 			self.status = 'walk'
 		elif keys[pygame.K_s]:
 			self.direction.y = 1
 			self.status = 'walk'
-		else:
-			self.direction.x = 0
+		if not any(pygame.key.get_pressed()):
 			self.direction.y = 0
 			self.status = 'idle'
 
 
+
+
+
+
+
 	def rotate(self):
 	    mouse_x, mouse_y = pygame.mouse.get_pos()
-	    rel_x, rel_y = mouse_x - self.position.x, mouse_y - self.position.y
+	    rel_x, rel_y = mouse_x - (WINDOW_WIDTH/2), mouse_y - (WINDOW_HEIGHT/2)
 	    angle = (180 / math.pi) * math.atan2(-rel_y, rel_x) + 90
 	    self.image = pygame.transform.rotozoom(self.image, int(angle),0.85)
 	    self.rect = self.image.get_rect(center=self.position)
