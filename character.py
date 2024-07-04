@@ -23,7 +23,16 @@ class Character(pygame.sprite.Sprite):
 		self.hitbox = self.rect
 		self.collision_sprites = collision_sprites
 
+		#attacking
+		self.melee = False
+		self.ranged1 = False
+		self.ranged2 = False 
 
+	def get_status(self):
+		if self.ranged1:
+			self.status = 'ranged'
+		if self.melee:
+			self.status = 'melee'
 
 	def import_assets(self,path):
 		self.animations = {}
@@ -40,11 +49,15 @@ class Character(pygame.sprite.Sprite):
 					self.animations[key].append(surface)
 
 
-
-
-
 	def input(self):
+		if pygame.mouse.get_pressed()[0]:
+			self.ranged1 = True
 		keys = pygame.key.get_pressed()
+
+		if keys[pygame.K_v]:
+			self.melee = True
+
+
 		if keys[pygame.K_d]:
 			self.direction.x = 1
 			self.status = 'walk'
@@ -62,11 +75,12 @@ class Character(pygame.sprite.Sprite):
 			self.direction.y = 0
 			self.status = 'idle'
 
+
 	def rotate(self):
 	    mouse_x, mouse_y = pygame.mouse.get_pos()
 	    rel_x, rel_y = mouse_x - self.position.x, mouse_y - self.position.y
 	    angle = (180 / math.pi) * math.atan2(-rel_y, rel_x) + 90
-	    self.image = pygame.transform.rotozoom(self.image, int(angle),1)
+	    self.image = pygame.transform.rotozoom(self.image, int(angle),0.85)
 	    self.rect = self.image.get_rect(center=self.position)
 
 	def move(self,delta_time):
@@ -79,14 +93,18 @@ class Character(pygame.sprite.Sprite):
 
 	def animate(self,delta_time):
 		current_animation = self.animations[self.status]
-		self.frame_index += 5 * delta_time
+		self.frame_index += 10 * delta_time
 		if self.frame_index >= len(current_animation):
 			self.frame_index = 0
+			if self.ranged1 or self.ranged2 or self.melee:
+				self.ranged1 = False
+				self.ranged2 =  False
+				self.melee = False
 		self.image = current_animation[int(self.frame_index)]
 
 	def update(self,delta_time):
 		self.input()
-
+		self.get_status()
 		self.move(delta_time)
 
 		self.animate(delta_time)
