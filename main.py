@@ -3,6 +3,9 @@ from pygame.math import Vector2 as vector2
 from settings import *
 import sys
 from character import Character
+from pytmx.util_pygame import load_pygame
+from sprite import Sprite
+
 
 
 class AllSprites(pygame.sprite.Group):
@@ -33,10 +36,19 @@ class Game:
 
 		#groups
 		self.all_sprites = AllSprites()
+		self.obstacles = pygame.sprite.Group()
+
 		self.setup()
 
 	def setup(self):
-		self.character = Character((200,200),self.all_sprites,PATHS['character'],None)
+		tmx_map = load_pygame('./levels/level1/level1.tmx')
+		for obj in tmx_map.get_layer_by_name('Objects'):
+			Sprite((obj.x, obj.y),obj.image,[self.all_sprites, self.obstacles])
+
+		for obj in tmx_map.get_layer_by_name('Entities'):
+			if obj.name == 'Character':
+				self.character = Character((obj.x,obj.y),self.all_sprites,PATHS['character'],self.obstacles)
+
 
 
 	def run(self):

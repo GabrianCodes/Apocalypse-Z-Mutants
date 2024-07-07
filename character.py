@@ -96,9 +96,15 @@ class Character(pygame.sprite.Sprite):
 
 		if self.direction.magnitude() != 0:
 			self.direction = self.direction.normalize()
-		self.position += self.direction *  self.speed * delta_time
-		self.hitbox.center = (round(self.position.x), round(self.position.y))
-		self.rect.center = self.hitbox.center
+		self.position.x += self.direction.x *  self.speed * delta_time
+		self.hitbox.centerx = round(self.position.x)
+		self.rect.centerx = self.hitbox.centerx
+		self.collision('horizontal')
+
+		self.position.y += self.direction.y *  self.speed * delta_time
+		self.hitbox.centery = round(self.position.y)
+		self.rect.centery = self.hitbox.centery
+		self.collision('vertical')
 
 	def animate(self,delta_time):
 		current_animation = self.animations[self.status]
@@ -110,6 +116,30 @@ class Character(pygame.sprite.Sprite):
 				self.ranged2 =  False
 				self.melee = False
 		self.image = current_animation[int(self.frame_index)]
+
+	def collision(self,direction):
+		for sprite in self.collision_sprites.sprites():
+			if sprite.hitbox.colliderect(self.hitbox):
+				if direction == 'horizontal':
+					if self.direction.x > 0:
+						self.hitbox.right = sprite.hitbox.left
+						self.rect.centerx = self.hitbox.centerx
+						self.position.x = self.hitbox.centerx
+					if self.direction.x < 0:
+						self.hitbox.left = sprite.hitbox.right
+						self.rect.centerx = self.hitbox.centerx
+						self.position.x = self.hitbox.centerx
+				else:
+					if self.direction.y > 0:
+						self.hitbox.bottom = sprite.hitbox.top
+						self.rect.centery = self.hitbox.centery
+						self.position.y = self.hitbox.centery
+					if self.direction.y < 0:
+						self.hitbox.top = sprite.hitbox.bottom
+						self.rect.centery = self.hitbox.centery
+						self.position.y = self.hitbox.centery
+
+
 
 	def update(self,delta_time):
 		self.input()
