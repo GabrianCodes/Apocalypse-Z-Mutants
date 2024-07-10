@@ -4,7 +4,7 @@ from settings import *
 import sys
 from character import Character
 from pytmx.util_pygame import load_pygame
-from sprite import Sprite
+from sprite import Sprite, Bullet
 
 
 
@@ -33,12 +33,17 @@ class Game:
 		self.display_surface = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 		pygame.display.set_caption('Survive')
 		self.clock = pygame.time.Clock()
+		self.bullet_surface = pygame.image.load('./assets/images/projectiles/bullet.png').convert_alpha()
 
 		#groups
 		self.all_sprites = AllSprites()
 		self.obstacles = pygame.sprite.Group()
+		self.bullets = pygame.sprite.Group()
 
 		self.setup()
+
+	def create_bullet(self,position,direction):
+		Bullet(position,direction, self.bullet_surface,[self.all_sprites,self.bullets])
 
 	def setup(self):
 		tmx_map = load_pygame('./levels/level1/level1.tmx')
@@ -47,7 +52,12 @@ class Game:
 
 		for obj in tmx_map.get_layer_by_name('Entities'):
 			if obj.name == 'Character':
-				self.character = Character((obj.x,obj.y),self.all_sprites,PATHS['character'],self.obstacles)
+				self.character = Character(
+					position = (obj.x,obj.y),
+					groups = self.all_sprites,
+					path  = PATHS['character'],
+					collision_sprites = self.obstacles,
+					create_bullet = self.create_bullet)
 
 
 

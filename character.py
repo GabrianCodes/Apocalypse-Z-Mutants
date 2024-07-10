@@ -6,7 +6,7 @@ import math
 
 
 class Character(pygame.sprite.Sprite):
-	def __init__(self,position,groups,path,collision_sprites):
+	def __init__(self,position,groups,path,collision_sprites, create_bullet):
 		super().__init__(groups)
 		self.import_assets(path)
 		self.frame_index = 0
@@ -27,6 +27,9 @@ class Character(pygame.sprite.Sprite):
 		self.melee = False
 		self.ranged1 = False
 		self.ranged2 = False 
+
+		self.create_bullet = create_bullet
+		self.bullet_shot = False
 
 	def get_status(self):
 		if self.ranged1:
@@ -52,6 +55,8 @@ class Character(pygame.sprite.Sprite):
 	def input(self):
 		if pygame.mouse.get_pressed()[0]:
 			self.ranged1 = True
+			self.frame_index = 0
+			self.bullet_shot = False
 		keys = pygame.key.get_pressed()
 
 		if keys[pygame.K_v]:
@@ -109,6 +114,12 @@ class Character(pygame.sprite.Sprite):
 	def animate(self,delta_time):
 		current_animation = self.animations[self.status]
 		self.frame_index += 10 * delta_time
+
+
+		if int(self.frame_index) == 1 and self.ranged1 and not self.bullet_shot:
+			self.create_bullet(self.rect.center,vector2(1,0.1)) 
+			self.bullet_shot = True
+
 		if self.frame_index >= len(current_animation):
 			self.frame_index = 0
 			if self.ranged1 or self.ranged2 or self.melee:
