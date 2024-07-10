@@ -17,6 +17,8 @@ class Bullet(pygame.sprite.Sprite):
 		self.direction = direction
 		self.speed = 900
 
+	
+
 	def move(self,delta_time):
 		if self.direction.magnitude() != 0:
 			self.direction = self.direction.normalize()
