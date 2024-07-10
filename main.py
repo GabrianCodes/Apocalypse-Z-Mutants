@@ -4,7 +4,8 @@ from settings import *
 import sys
 from character import Character
 from pytmx.util_pygame import load_pygame
-from sprite import Sprite, Bullet
+from sprite import Sprite
+from bullet import Bullet
 
 
 
@@ -43,7 +44,7 @@ class Game:
 		self.setup()
 
 	def create_bullet(self,position,direction):
-		Bullet(position,direction, self.bullet_surface,[self.all_sprites,self.bullets])
+		Bullet(position, direction, self.bullet_surface,[self.all_sprites,self.bullets])
 
 	def setup(self):
 		tmx_map = load_pygame('./levels/level1/level1.tmx')

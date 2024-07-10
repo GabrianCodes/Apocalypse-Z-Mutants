@@ -120,8 +120,8 @@ class Character(pygame.sprite.Sprite):
 			mouse_x, mouse_y = pygame.mouse.get_pos()
 			rel_x, rel_y = mouse_x - (WINDOW_WIDTH/2), mouse_y - (WINDOW_HEIGHT/2)
 			angle = math.atan2(rel_y, rel_x)
+			
 			x,y = math.cos(angle), math.sin(angle)
-			print(x,y)
 			self.create_bullet(self.rect.center,vector2(x,y))
 			self.bullet_shot = True
 
