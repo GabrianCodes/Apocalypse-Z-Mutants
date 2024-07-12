@@ -6,6 +6,7 @@ from character import Character
 from pytmx.util_pygame import load_pygame
 from sprite import Sprite
 from bullet import Bullet
+from zombies import Zombieboss, Zombie1, Zombie2, Zombie3
 
 
 
@@ -60,7 +61,26 @@ class Game:
 					collision_sprites = self.obstacles,
 					create_bullet = self.create_bullet)
 
-
+			if obj.name == 'zombieboss':
+				Zombieboss( position = (obj.x,obj.y),
+					groups = self.all_sprites,
+					path  = PATHS['zombieboss'],
+					collision_sprites = self.obstacles)
+			if obj.name == 'zombie1':
+				Zombie1( position = (obj.x,obj.y),
+					groups = self.all_sprites,
+					path  = PATHS['zombie1'],
+					collision_sprites = self.obstacles)
+			if obj.name == 'zombie2':
+				Zombie2( position = (obj.x,obj.y),
+					groups = self.all_sprites,
+					path  = PATHS['zombie2'],
+					collision_sprites = self.obstacles)
+			if obj.name == 'zombie3':
+				Zombie3( position = (obj.x,obj.y),
+					groups = self.all_sprites,
+					path  = PATHS['zombie3'],
+					collision_sprites = self.obstacles)
 
 	def run(self):
 		while True:

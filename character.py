@@ -1,13 +1,13 @@
 import pygame
 from pygame.math import Vector2 as vector2
-from os import walk
 from settings import *
 import math
+from entities import Entity
 
 
-class Character(pygame.sprite.Sprite):
-	def __init__(self,position,groups,path,collision_sprites, create_bullet):
-		super().__init__(groups)
+class Character(Entity):
+	def __init__(self,position,groups,path,collision_sprites,create_bullet):
+		super().__init__(position,groups,path,collision_sprites)
 		self.import_assets(path)
 		self.frame_index = 0
 		self.status = 'idle'
@@ -37,19 +37,7 @@ class Character(pygame.sprite.Sprite):
 		if self.melee:
 			self.status = 'melee'
 
-	def import_assets(self,path):
-		self.animations = {}
 
-		for index, folder in enumerate(walk(path)):
-			if index == 0:
-				for name in folder[1]:
-					self.animations[name] = []
-			else:
-				for file_name in sorted(folder[2]):
-					path = folder[0].replace('\\','/') + '/' + file_name
-					surface = pygame.image.load(path).convert_alpha()
-					key = folder[0].split('\\')[1]
-					self.animations[key].append(surface)
 
 
 	def input(self):
@@ -94,22 +82,9 @@ class Character(pygame.sprite.Sprite):
 	    mouse_x, mouse_y = pygame.mouse.get_pos()
 	    rel_x, rel_y = mouse_x - (WINDOW_WIDTH/2), mouse_y - (WINDOW_HEIGHT/2)
 	    angle = (180 / math.pi) * math.atan2(-rel_y, rel_x) + 90
-	    self.image = pygame.transform.rotozoom(self.image, int(angle),0.85)
+	    self.image = pygame.transform.rotozoom(self.image, int(angle),0.5)
 	    self.rect = self.image.get_rect(center=self.position)
 
-	def move(self,delta_time):
-
-		if self.direction.magnitude() != 0:
-			self.direction = self.direction.normalize()
-		self.position.x += self.direction.x *  self.speed * delta_time
-		self.hitbox.centerx = round(self.position.x)
-		self.rect.centerx = self.hitbox.centerx
-		self.collision('horizontal')
-
-		self.position.y += self.direction.y *  self.speed * delta_time
-		self.hitbox.centery = round(self.position.y)
-		self.rect.centery = self.hitbox.centery
-		self.collision('vertical')
 
 	def animate(self,delta_time):
 		current_animation = self.animations[self.status]
