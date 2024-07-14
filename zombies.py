@@ -4,18 +4,35 @@ from settings import *
 import math
 from entities import Entity
 
-class Zombieboss(Entity):
-	def __init__(self,position,groups,path,collision_sprites):
-		super().__init__(position,groups,path,collision_sprites)
+class Zombie(Entity):
+    def __init__(self, position, groups, path, collision_sprites, player):
+        super().__init__(position, groups, path, collision_sprites)
+        self.player = player  # Reference to the player character
+        self.speed = 100  # Adjust speed as needed
 
-class Zombie1(Entity):
-	def __init__(self,position,groups,path,collision_sprites):
-		super().__init__(position,groups,path,collision_sprites)
+    def update(self, delta_time):
+        # Calculate the direction vector towards the player
+        player_position = vector2(self.player.rect.center)
+        direction = player_position - self.position
 
-class Zombie2(Entity):
-	def __init__(self,position,groups,path,collision_sprites):
-		super().__init__(position,groups,path,collision_sprites)
+        if direction.magnitude() != 0:
+            direction = direction.normalize()
 
-class Zombie3(Entity):
-	def __init__(self,position,groups,path,collision_sprites):
-		super().__init__(position,groups,path,collision_sprites)
+        self.direction = direction
+        super().update(delta_time)  # Call the update method from Entity
+
+class Zombieboss(Zombie):
+    def __init__(self, position, groups, path, collision_sprites, player):
+        super().__init__(position, groups, path, collision_sprites, player)
+
+class Zombie1(Zombieboss):
+    def __init__(self, position, groups, path, collision_sprites, player):
+        super().__init__(position, groups, path, collision_sprites, player)
+
+class Zombie2(Zombieboss):
+    def __init__(self, position, groups, path, collision_sprites, player):
+        super().__init__(position, groups, path, collision_sprites, player)
+
+class Zombie3(Zombieboss):
+    def __init__(self, position, groups, path, collision_sprites, player):
+        super().__init__(position, groups, path, collision_sprites, player)
