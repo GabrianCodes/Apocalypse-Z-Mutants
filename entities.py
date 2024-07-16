@@ -1,6 +1,7 @@
 import pygame
 from os import walk
 from pygame.math import Vector2 as vector2
+import math
 
 class Entity(pygame.sprite.Sprite):
     def __init__(self, position, groups, path, collision_sprites):
@@ -81,6 +82,12 @@ class Entity(pygame.sprite.Sprite):
         if self.frame_index >= len(current_animation):
             self.frame_index = 0
         self.image = current_animation[int(self.frame_index)]
+
+    def rotate(self, target_position):
+        direction = target_position - self.position
+        angle = math.degrees(math.atan2(-direction.y, direction.x)) + 90
+        self.image = pygame.transform.rotozoom(self.image, angle, 0.5)
+        self.rect = self.image.get_rect(center=self.position)
 
     def update(self, delta_time):
         self.move(delta_time)

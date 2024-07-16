@@ -37,7 +37,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.bullet_surface = pygame.image.load('./assets/images/projectiles/bullet.png').convert_alpha()
 
-        # groups
+        # Groups
         self.all_sprites = AllSprites()
         self.obstacles = pygame.sprite.Group()
         self.bullets = pygame.sprite.Group()
@@ -96,10 +96,10 @@ class Game:
 
             delta_time = self.clock.tick() / 1000
 
-            # update
+            # Update
             self.all_sprites.update(delta_time)
 
-            # draw
+            # Draw
             self.display_surface.fill('black')
             self.all_sprites.customize_draw(self.character)
 
